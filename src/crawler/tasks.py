@@ -6,6 +6,7 @@ import urllib.request
 test_search_string_list = ['홈', '베이킹', '쿠킹']
 test_search_exclude_list = ['소다']
 
+
 def search_on_naver(search_text_list, exclude_text_list, num_of_search_display_option, sort_date_option):
 	
 	final_search_text = ""
