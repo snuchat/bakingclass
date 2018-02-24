@@ -3,8 +3,6 @@ import sys
 import json
 import urllib.request
 
-client_id = '5JDF3srjAxpL2cWyvS3g'
-client_secret = 'bVQy7bCRA8'
 test_search_string_list = ['홈', '베이킹', '쿠킹']
 test_search_exclude_list = ['소다']
 
