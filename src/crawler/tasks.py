@@ -1,10 +1,24 @@
 import os
 import sys
 import json
+import re
 import urllib.request
+import naver_secrets
 
 test_search_string_list = ['홈', '베이킹', '쿠킹']
 test_search_exclude_list = ['소다']
+
+#clean up your tag
+def remove_tags(text):
+	TAG_RE = re.compile(r'<[^>]+>')
+	return TAG_RE.sub('',text)
+
+#clean up bloglink
+#?Redirect=Log&amp;logNo=   ==> / change
+def clean_up_bloglink(text):
+	TAG_RE = re.compile(r'[?]Redirect=Log&amp;logNo[=]')
+	return TAG_RE.sub('/', text)
+
 
 def search_on_naver(search_text_list, exclude_text_list, num_of_search_display_option, sort_date_option):
 	
@@ -36,8 +50,8 @@ def search_on_naver(search_text_list, exclude_text_list, num_of_search_display_o
 	print(url)
 
 	request = urllib.request.Request(url)
-	request.add_header("X-Naver-Client-Id", client_id)
-	request.add_header("X-Naver-Client-Secret", client_secret)
+	request.add_header("X-Naver-Client-Id", naver_secrets.client_id)
+	request.add_header("X-Naver-Client-Secret", naver_secrets.client_secret)
 
 	response = urllib.request.urlopen(request)
 	rescode = response.getcode()
@@ -48,10 +62,29 @@ def search_on_naver(search_text_list, exclude_text_list, num_of_search_display_o
 		#print("Error Code: " + rescode)
 		return False
 
+def clean_json_data(json_input):
+	# do we need backup for json_input?
+	for i in range(0, len(json_input['items'])):
+		json_input['items'][i]['title'] = remove_tags(json_input['items'][i]['title'])
+		json_input['items'][i]['link'] = clean_up_bloglink(json_input['items'][i]['link'])
+		json_input['items'][i]['description'] = remove_tags(json_input['items'][i]['description'])
+	return json_input
+
+
 ## main code
-return_val = search_on_naver(test_search_string_list,test_search_exclude_list, 11, False)
+return_val = search_on_naver(test_search_string_list,test_search_exclude_list, 11, True)
 if(return_val == False):
+	# if error happend send mail to owner
+	# TODO 
 	print("error")
 else:
 	print(return_val)
-	print(return_val['items'][0]['title'])
+	print(return_val['items'][0]['description'])
+	cleaned_data = clean_json_data(return_val)
+	print(cleaned_data)
+	print(cleaned_data['items'][0]['description'])
+
+	# print(return_val['items'][0]['title'])
+	# print(remove_tags(return_val['items'][0]['title']))
+	# print(return_val['items'][0]['link'])
+	# print(clean_up_bloglink(return_val['items'][0]['link']))
