@@ -8,7 +8,6 @@ import naver_secrets
 test_search_string_list = ['홈', '베이킹', '쿠킹']
 test_search_exclude_list = ['소다']
 
-<<<<<<< HEAD
 #clean up your tag
 def remove_tags(text):
 	TAG_RE = re.compile(r'<[^>]+>')
@@ -20,8 +19,6 @@ def clean_up_bloglink(text):
 	TAG_RE = re.compile(r'[?]Redirect=Log&amp;logNo[=]')
 	return TAG_RE.sub('/', text)
 
-=======
->>>>>>> 9746b6bc514cb24918ee230856224a6896db7352
 
 def search_on_naver(search_text_list, exclude_text_list, num_of_search_display_option, sort_date_option):
 	
